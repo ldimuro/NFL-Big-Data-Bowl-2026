@@ -260,7 +260,7 @@ def create_play_gif(play_data, frames: DataFrame, file_name, zoom=False, loop=Tr
             plot_frame(frame, play_data, file_name, data_type)
     
     frames_folder = f"play_frames/{file_name}"
-    gif_output_path = f"play_gifs/{file_name}.gif"
+    gif_output_path = f"zone_play_gifs/{file_name}.gif"
 
     # Get list of image filenames in sorted order
     frame_files = sorted([
