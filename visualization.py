@@ -125,16 +125,26 @@ def plot_frame(frame, play_data, file_name, data_type, zoom=False):
     # Add indicator around Targeted Receiver
     targeted_receiver_id = frame[frame['player_role'] == 'Targeted Receiver'].iloc[0]['nfl_id']
     receiver_row = frame[frame['nfl_id'] == targeted_receiver_id]
+    gi_val = receiver_row['gi'].iloc[0]
+
     if not receiver_row.empty:
-        indicator_color = "#15FF00"
+        
+        if gi_val <= 0.5:
+            indicator_color = "#FF0000"
+        elif gi_val <= 0.7:
+            indicator_color = "#FF9100"
+        elif gi_val > 0.7:
+            indicator_color = "#15FF00"
+        else:
+            indicator_color = "none"
 
         ax.scatter(
             receiver_row['x'], 
             receiver_row['y'], 
             s=1100 if zoom else 100, 
-            facecolors='none', 
+            facecolors='dodgerblue', 
             edgecolors=indicator_color, 
-            linewidths=2, 
+            linewidths=3, 
             zorder=4
         )
 
@@ -222,7 +232,7 @@ def plot_frame(frame, play_data, file_name, data_type, zoom=False):
         possession_team = 'Team1'
         defensive_team = 'Team2'
 
-    play_state = f"{possession_team} vs. {defensive_team}, Q{play_data['quarter']} {play_data['game_clock']}, {play_data['down']}{suffixes[play_data['down']]} & {play_data['yards_to_go']}"
+    play_state = f"{possession_team} vs. {defensive_team}, Q{play_data['quarter']} {play_data['game_clock']}, {play_data['down']}{suffixes[play_data['down']]} & {play_data['yards_to_go']}, GI:{np.round(frame['gi'].iloc[0], 4)}"
     # play_state += f", yardsGained: {yards_gained}, {spsp_prob*100:.2f}% SPSP ({spsp_rolling_avg*100:.2f}% rolling)"
     # play_state = 'test_state'
     fig.text(0.5, 0.90, play_state, ha='center', fontsize=16)
